@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../includes/pipex.h"
 
 void	exec(char *cmd, char **envp)
 {
@@ -64,16 +64,20 @@ void	pipex(int fd1, int fd2, char **argv, char **envp)
 		return (ft_perror("pipex: ", "fork"));
 	if (parent1 == 0)
 		process_child(argv[2], envp, end, fd1);
-	else
-	{
-		parent2 = fork();
-		if (parent2 < 0)
-			return (ft_perror("pipex: ", "fork"));
-		else if (parent2 == 0)
-			process_parent(argv[3], envp, end, fd2);
-	}
-	waitpid(parent1, NULL, 0);
-	waitpid(parent2, NULL, 0);
+	// else
+	// {
+		// parent2 = fork();
+		// if (parent2 < 0)
+		// 	return (ft_perror("pipex: ", "fork"));
+		// else if (parent2 == 0)
+	process_parent(argv[3], envp, end, fd2);
+	// }
+	int	coucou;
+
+	waitpid(parent1, &coucou, 0);
+	dprintf(2, "%d\n", coucou);
+	// waitpid(parent2, NULL, 0);
+	dprintf(2, "%d\n", coucou);
 	close(end[1]);
 	close(fd2);
 }

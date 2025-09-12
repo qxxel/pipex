@@ -20,7 +20,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 
-# include "libft/libft.h"
+# include "../libft/includes/libft.h"
 
 char	*found_path(char *cmd, char **env);
 void	free_tab(char **tab);

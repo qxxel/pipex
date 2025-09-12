@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "../includes/pipex.h"
 
 int	check_path(char *s)
 {
@@ -43,6 +43,8 @@ void	free_tab(char **tab)
 {
 	size_t	i;
 
+	if (!tab)
+		return ;
 	i = 0;
 	while (tab[i])
 	{
@@ -85,7 +87,7 @@ char	*found_path(char *cmd, char **envp)
 
 	i = 0;
 	all_path = ft_split(get_envp("PATH", envp), ':');
-	while (all_path[i])
+	while (all_path && all_path[i])
 	{
 		path = ft_strjoin(all_path[i], "/");
 		exec = ft_strjoin(path, cmd);
