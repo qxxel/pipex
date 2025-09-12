@@ -3,52 +3,55 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: agerbaud <agerbaud@student.42lyon.fr>      +#+  +:+       +#+         #
+#    By: agerbaud <agerbaud@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/07 12:34:17 by agerbaud          #+#    #+#              #
-#    Updated: 2024/04/04 18:50:14 by agerbaud         ###   ########.fr        #
+#    Updated: 2025/09/12 11:17:01 by agerbaud         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 LIBFTDIR = libft
 LIBFT = $(LIBFTDIR)/libft.a
-INCLUDE = pipex.h
-SRCS =	pipex.c	\
-		utils.c
+SRCS = srcs/pipex.c srcs/utils.c
 
-CC = cc -Wall -Wextra -Werror -MMD -g3
+CC = cc
+CFLAGS = -Wall -Wextra -Werror -MMD
+BUILD_DIR = .build
 
-OBJECTS = $(SRCS:.c=.o)
-DEPENDANCIES = $(SRCS:.c=.d)
+OBJECTS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
+DEPENDENCIES = $(SRCS:%.c=$(BUILD_DIR)/%.d)
+
+LIBFT_SRC = $(wildcard $(LIBFTDIR)/*.c) $(wildcard $(LIBFTDIR)/**/*.c)
+LIBFT_HDR = $(wildcard $(LIBFTDIR)/*.h) $(wildcard $(LIBFTDIR)/**/*.h)
+LIBFT_DEPS = $(LIBFT_SRC) $(LIBFT_HDR)
 
 
 all: $(NAME)
 
-$(LIBFTDIR):
-	$(MAKE) -C $@ bonus
-
-$(LIBFT): $(LIBFTDIR)
+$(LIBFT): $(LIBFT_DEPS)
+	$(MAKE) -C $(LIBFTDIR) bonus
 
 $(NAME): $(OBJECTS) $(LIBFT)
-	$(CC) $(LIBFT) -o $@ $^
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) -o $@
 
--include $(DEPENDANCIES)
+$(BUILD_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 
-%.o: %.c
-	$(CC) -c $<
+-include $(DEPENDENCIES)
 
 
 clean:
-	$(RM) $(OBJECTS) $(DEPENDANCIES)
-	$(MAKE) -C $(LIBFTDIR) $@
+	$(RM) -r $(BUILD_DIR)
+	$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
-	$(MAKE) -C $(LIBFTDIR) $@
+	$(MAKE) -C $(LIBFTDIR) fclean
 
 re: fclean all
 
 
-.PHONY: all clean fclean re $(LIBFTDIR)
+.PHONY: all clean fclean re
