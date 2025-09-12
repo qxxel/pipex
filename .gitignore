@@ -1,3 +1,7 @@
 *.o
 *.d
 pipex
+.build/
+libft/libft.a
+libft/.build/
+.vscode
